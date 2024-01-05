@@ -1,0 +1,608 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Backend Assignment",
+    "version": "1.0.0",
+    "title": "Blogging API"
+   },
+  "servers": [
+      {
+        "url": "http://localhost:8080",
+        "description": "Local server"
+      }
+   ],
+  "securityDefinitions": {
+      "bearerAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "required": true,
+        "description": "Bearer token to access these api endpoints",
+        "scheme": "bearer"
+      }
+   }, 
+  "security": [
+          {
+            "bearerAuth": []
+          }
+   ],
+  "tags": [
+      {
+      "name": "User",
+      "description": "User APIs for Login and Register "
+      },
+      {
+        "name": "Blog",
+        "description": "API for Blogs. "
+      }
+   ],
+  "paths": {
+      "/login": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Create a new token",
+          "description": "This endpoint will do login",
+          "requestBody": {
+            "description": "Login Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/schemas/login"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "201": {
+              "description": "Token Created",
+              "content": {
+                "application/json": {
+                "schema": {
+                "$ref": "#/serverResponseExample/createLoginSuccess"
+                  }
+                }
+              }
+            }, 
+            "400": {
+              "description": "Bad Request.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/createLoginError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/register": {
+        "post": {
+          "tags": [
+            "User"
+          ],
+          "summary": "Register a new user",
+          "description": "This endpoint will register user",
+          "requestBody": {
+            "description": "Register Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/schemas/register"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "201": {
+              "description": "User Created",
+              "content": {
+                "application/json": {
+                "schema": {
+                "$ref": "#/serverResponseExample/createLoginSuccess"
+                  }
+                }
+              }
+            }, 
+            "400": {
+              "description": "Bad Request.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/createLoginError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/blogs": {
+        "get": {
+          "tags": [
+            "Blog"
+          ],
+          "summary": "Return blogs",
+          "description": "This endpoint will get all blogs",
+          "security":[{"JWT": {} }],
+          "responses": {
+            "200": {
+              "description": "Blog Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/schemas/blogs"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/unauthorizedError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "tags": [
+            "Blog"
+          ],
+          "summary": "Create a new Blog",
+          "description": "This endpoint will create blog",
+          "security":[{"JWT": {} }],
+          "requestBody": {
+            "description": "Blog Post Object",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/schemas/blog"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Blog Created",
+              "content": {
+                "application/json": {
+                "schema": {
+                "$ref": "#/serverResponseExample/createBlogSuccess"
+                  }
+                }
+              }
+            }, 
+            "400": {
+              "description": "Bad Request.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/createBlogError"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/unauthorizedError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/blogs/{id}": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of the blog that we want to match",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Blog"
+          ],
+          "summary": "Get a Blog with given ID",
+          "description": "This endpoint will get Blog by ID.",
+          "security":[{"JWT": {} }],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Blog ID",
+              "schema": {
+                "$ref": "#/schemas/id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Blog Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/getBlogByIdSuccess"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/unauthorizedError"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/getBlogByIdNotFoundError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update a Blog by ID",
+          "description": "This endpoint will update a blog by ID",
+          "security":[{"JWT": {} }],
+          "tags": [
+            "Blog"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Update Blog",
+              "schema": {
+                "$ref": "#/schemas/id"
+              }
+            }
+          ],
+          "requestBody": {
+            "description": "Update Blog",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/schemas/blog"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Blog Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/updateBlogByIdSuccess"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/unauthorizedError"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/getBlogByIdNotFoundError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete Blog by ID",
+          "description": "This API Endpoint will delete Blog by ID",
+          "security":[{"JWT": {} }],
+          "tags": [
+            "Blog"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "description": "Delete blog",
+              "schema": {
+                "$ref": "#/schemas/id"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Blog Data",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/deleteBlogByIdSuccess"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/unauthorizedError"
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Not Found Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/getBlogByIdNotFoundError"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/serverResponseExample/serverError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+   },
+  "components": {
+    "securitySchemes":{
+    "JWT":{
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
+    }
+    }
+    },
+    "schemas": {
+      "id": {
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "login": {
+        "type": "object",
+        "properties": {
+            "username": {
+                "type": "string",
+                "format": "string"
+              },
+            "password": {
+                "type": "string",
+                "format": "string"
+              }
+        }
+      },
+      "register": {
+        "type": "object",
+        "properties": {
+            "name": {
+                "type": "string",
+                "format": "string"
+              },
+            "email": {
+                "type": "string",
+                "format": "string"
+              },
+            "pwd": {
+                "type": "string",
+                "format": "string"
+              }
+        }
+      },
+      "blog": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "string",
+                "format": "string"
+              },
+            "content": {
+                "type": "string",
+                "format": "string"
+              },
+            "author": {
+                "type": "string",
+                "format": "string"
+              }
+        }
+      },
+      "blogs": {
+        "type": "object",
+        "properties": {
+          "blog": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/schemas/blog"
+          }
+        }
+     }
+    }
+    },
+  "serverResponseExample": {
+    "notFound": {
+      "code": 404,
+      "message": "Not Found"
+    },
+    "serverError": {
+      "example": {
+        "code": 500,
+        "message": "Internal server error"
+      }
+    },
+    "unauthorizedError": {
+      "example": {
+       "code": 401,
+       "message": "Missing Authorization Headers"
+      }
+    },
+    "createLoginError": {
+      "example": {
+        "code": 400,
+        "message": "Username is required, Password is required"
+      }
+    },
+    "createBlogError": {
+      "example": {
+        "code": 400,
+        "message": "Title is required, Conntent is required, Author is required"
+      }
+    },
+    "createLoginSuccess": {
+      "example": {
+        "access_token" :"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcwMTMyNDI0NSwianRpIjoiMGJkNWI2ZGQtYjc5Yy00ODBkLWE3NzAtMzMyYmVkMWFkMWU3IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6InVzZXIxIiwibmJmIjoxNzAxMzI0MjQ1LCJleHAiOjE3MDEzMjUxNDV9.E1nzEIXCqMMmmE5eGbo6zdEOpVFV_bWeqFzzZ8Zg_48"
+      }
+    },
+    "createBlogSuccess": {
+      "example": {
+        "title": "Day1",
+        "content": "Day1 of 2024",
+        "author": "Prats",
+        "id": 1
+      }
+    },
+    "getBlogByIdSuccess": {
+      "example": {
+        "title": "Day1",
+        "content": "Day1 of 2024",
+        "author": "Prats",
+        "id": 1
+      }
+    },
+    "getBlogByIdNotFoundError": {
+      "example": {
+        "code": 404,
+        "message": "Blog not found" 
+      }
+    },
+    "updateBlogByIdSuccess": {
+      "example": {
+        "title": "Day1",
+        "content": "Day1 of 2024",
+        "author": "Prats",
+        "id": 1
+      }
+    },
+    "deleteBlogByIdSuccess": {
+      "example": {
+        "message": "Blog Deleted successfully"
+      }
+    }
+    }
+  }
